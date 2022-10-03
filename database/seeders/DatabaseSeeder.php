@@ -17,14 +17,18 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
+        \App\Models\User::factory(10)->hasPost(10)->create();
 
         // \App\Models\User::factory()->create([
         //     'name' => 'Ferdy',
         //     'username' => 'ferdi24',
         // ]);
 
-        $post = Post::factory(5)->create();
+        // $users->each(function ($user) {
+        //     \App\Models\User::factory(10)->create(['id_user' => $user->id]);
+        // });
+
+        // $post = Post::factory(5)->create();
 
         Comment::factory(5)->create();
     }
