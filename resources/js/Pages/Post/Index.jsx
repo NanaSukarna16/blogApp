@@ -4,6 +4,7 @@ import { Link } from "@inertiajs/inertia-react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import Swal from "sweetalert2";
 import Pagination from "@/Components/Pagintion";
+import { TrashIcon, EyeIcon, PencilSquareIcon } from "@heroicons/react/20/solid";
 
 export default function Post({ auth, errors, post }) {
     function handleDelete(target) {
@@ -88,21 +89,22 @@ export default function Post({ auth, errors, post }) {
                                                         href={route("post.edit", item.id)}
                                                         className="text-indigo-600 hover:text-indigo-900"
                                                     >
-                                                        Edit
-                                                        <span className="sr-only">, {item.judul}</span>
+
+                                                        <PencilSquareIcon className="inline-block w-5 h-5" />
+                                                        <span className="sr-only">{item.judul}</span>
                                                     </Link>
                                                     <Link
                                                         href={route("post.detail", item.id)}
                                                         className="text-green-600 hover:text-green-900"
                                                     >
-                                                        Show
+                                                        <EyeIcon className="inline-block w-5 h-5" />
                                                         <span className="sr-only">, {item.judul}</span>
                                                     </Link>
                                                     <span
                                                         className="text-red-600 hover:text-red-900 cursor-pointer"
                                                         onClick={() => handleDelete(item)}
                                                     >
-                                                        Hapus
+                                                        <TrashIcon className="inline-block h-5 w-5" aria-hidden="true" />
                                                         <span className="sr-only">, {item.nama}</span>
                                                     </span>
                                                 </td>
