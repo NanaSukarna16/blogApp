@@ -29,7 +29,7 @@ export default function Post({ auth, errors, post }) {
             <div className="py-4">
                 <div className="sm:flex sm:items-center">
                     <div className="sm:flex-auto">
-                        <h1 className="text-xl font-semibold text-gray-900">Kategori</h1>
+                        <h1 className="text-xl font-semibold text-gray-900">My Post</h1>
                         <p className="mt-2 text-sm text-gray-700">
                             List Post yang telah di buat
                         </p>
