@@ -7,12 +7,12 @@ import { usePage } from "@inertiajs/inertia-react";
 export default function PublicLayout(props) {
 
     const { auth } = usePage().props;
-    // const navigation = [
-    //     { name: "Home", href: "/" },
-    //     { name: "Barang", href: '#' },
-    //     { name: "Tentang", href: "#" },
-    //     { name: "Kontak", href: "#" },
-    // ];
+    const navigation = [
+        { name: "Home", href: "/" },
+        { name: "Barang", href: '#' },
+        { name: "Tentang", href: "#" },
+        { name: "Kontak", href: "#" },
+    ];
 
     return (
         <div className="relative bg-gray-50 min-h-screen h-full">
@@ -156,7 +156,7 @@ export default function PublicLayout(props) {
                                         </Popover.Button>
                                     </div>
                                 </div>
-                                {/* <div className="px-2 pt-2 pb-3">
+                                <div className="px-2 pt-2 pb-3">
                                     {navigation.map((item) => (
                                         <Link
                                             key={item.name}
@@ -166,7 +166,7 @@ export default function PublicLayout(props) {
                                             {item.name}
                                         </Link>
                                     ))}
-                                </div> */}
+                                </div>
                                 <Link
                                     href={auth.user ? route('dashboard') : route('login')}
                                     className="block w-full bg-gray-50 px-5 py-3 text-center font-medium text-indigo-600 hover:bg-gray-100"

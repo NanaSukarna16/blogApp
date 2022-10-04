@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PostPublicController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
+use App\Models\Post;
 use Inertia\Inertia;
 
 /*
@@ -41,5 +42,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/detail-post/comment', [CommentController::class, 'store'])->name('comment.store');
     Route::post('comment/delete/{comment}', [CommentController::class, 'destroy'])->name('comment.destroy');
 });
+
+
+// format date ke string
+// Route::get('/', function () {
+//     $posts = Post::all()->map(function ($post) {
+//         return [
+//             'id' => $post->id,
+//             'tanggal' => $post->created_at->toFormattedDateString(),
+//             'judul' => $post->judul,
+//             'konten' => $post->konten
+//         ];
+//     });
+//     return Inertia::render('Welcome', compact(('posts')));
+// });
 
 require __DIR__ . '/auth.php';

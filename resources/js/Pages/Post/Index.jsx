@@ -61,13 +61,7 @@ export default function Post({ auth, errors, post }) {
                                                 scope="col"
                                                 className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                                             >
-                                                Konten
-                                            </th>
-                                            <th
-                                                scope="col"
-                                                className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
-                                            >
-                                                User
+                                                Tanggal
                                             </th>
                                             <th
                                                 scope="col"
@@ -87,10 +81,7 @@ export default function Post({ auth, errors, post }) {
                                                     {item.judul}
                                                 </td>
                                                 <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                                                    {item.konten}
-                                                </td>
-                                                <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                                                    {item.user.name}
+                                                    {item.created_at}
                                                 </td>
                                                 <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium space-x-2 sm:pr-6">
                                                     <Link
