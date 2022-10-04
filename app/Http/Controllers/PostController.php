@@ -118,11 +118,14 @@ class PostController extends Controller
      */
     public function destroy(Request $request, Post $post)
     {
+        $prevUrl = $request->headers->get('referer');
+        $intendedUrl = preg_match('/\/detail-post\/\d/', $prevUrl) ? '/' : route('post.index');
+
         $this->authorize('delete', $post);
 
         $post->delete();
 
-        return redirect()->back()->with('flash', [
+        return redirect($intendedUrl)->with('flash', [
             'type' => 'success',
             'title' => 'Post Telah Dihapus',
             'body' => 'Post Berhasil Dihapus',

@@ -10,8 +10,9 @@ import { Menu, Transition } from '@headlessui/react'
 import classNames from 'classnames';
 import { PencilSquareIcon, EllipsisVerticalIcon, TrashIcon } from '@heroicons/react/20/solid'
 import FlashMessage from '@/Components/FlashMessage';
+import Swal from 'sweetalert2';
 
-export default function ShowPost({ comment, post }) {
+export default function ShowPost({ comment, post, can_update, can_delete }) {
     const { data, setData, errors, processing, submit, reset } = useForm(
         {
             konten: "",
@@ -27,6 +28,43 @@ export default function ShowPost({ comment, post }) {
             onSuccess: reset()
         });
     }
+
+    function handleEdit(comment) {
+        Swal.fire({
+            title: `Edit Comment ${comment.user.name}`,
+            input: 'text',
+            inputValue: `${comment.konten}`,
+            inputAttributes: {
+                autocapitalize: 'off',
+            },
+            showCancelButton: true,
+            confirmButtonText: 'Update',
+            showLoaderOnConfirm: true,
+            preConfirm: (login) => {
+                return fetch(`//api.github.com/users/${login}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(response.statusText)
+                        }
+                        return response.json()
+                    })
+                    .catch(error => {
+                        Swal.showValidationMessage(
+                            `Request failed: ${error}`
+                        )
+                    })
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: `${result.value.login}'s avatar`,
+                    imageUrl: result.value.avatar_url
+                })
+            }
+        })
+    }
+
     return (
         <PublicLayout >
             <div className="text-center">
@@ -56,7 +94,65 @@ export default function ShowPost({ comment, post }) {
                             Waktu : {post.created_at}
                         </span>
                     </div>
+                    <div className="flex flex-shrink-0 self-center">
+                        {can_update && can_delete && (
+                            <Menu as="div" className="relative inline-block text-left">
+                                <div>
+                                    <Menu.Button className="-m-2 flex items-center rounded-full p-2 text-gray-400 hover:text-gray-600">
+                                        {/* <span className="sr-only">Open options</span> */}
+                                        <EllipsisVerticalIcon className="h-5 w-5" aria-hidden="true" />
+                                    </Menu.Button>
+                                </div>
+
+                                <Transition
+                                    as={Fragment}
+                                    enter="transition ease-out duration-100"
+                                    enterFrom="transform opacity-0 scale-95"
+                                    enterTo="transform opacity-100 scale-100"
+                                    leave="transition ease-in duration-75"
+                                    leaveFrom="transform opacity-100 scale-100"
+                                    leaveTo="transform opacity-0 scale-95"
+                                >
+                                    <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                        <div className="py-1">
+                                            <Menu.Item>
+                                                {({ active }) => (
+                                                    <Link
+                                                        href={route("post.edit", post.id)}
+                                                        className={classNames(
+                                                            active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                                                            'flex px-4 py-2 text-sm'
+                                                        )}
+                                                    >
+                                                        <PencilSquareIcon className="mr-3 h-5 w-5 text-gray-400" aria-hidden="true" />
+                                                        <span>Edit</span>
+                                                    </Link>
+                                                )}
+                                            </Menu.Item>
+                                            <Menu.Item>
+                                                {({ active }) => (
+                                                    <Link
+                                                        method='delete'
+                                                        href={route("post.destroy", post.id)}
+                                                        className={classNames(
+                                                            active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                                                            'flex px-4 py-2 text-sm'
+                                                        )}
+                                                    >
+                                                        <TrashIcon className="mr-3 h-5 w-5 text-gray-400" aria-hidden="true" />
+                                                        <span>Hapus</span>
+                                                    </Link>
+                                                )}
+                                            </Menu.Item>
+                                        </div>
+                                    </Menu.Items>
+                                </Transition>
+                            </Menu>
+                        )}
+                    </div>
                 </div>
+
+
                 <form onSubmit={onSubmit} className="mt-2 space-y-3">
                     <div>
                         <TextInputHidden
@@ -82,6 +178,8 @@ export default function ShowPost({ comment, post }) {
                     </div>
                 </form>
             </div>
+
+
 
             <div className="mt-3 bg-white px-4 py-5 sm:px-6">
                 <div className="flex space-x-3">
@@ -121,16 +219,26 @@ export default function ShowPost({ comment, post }) {
                                             <div className="py-1">
                                                 <Menu.Item>
                                                     {({ active }) => (
-                                                        <Link
-                                                            href="#"
+                                                        <span
                                                             className={classNames(
                                                                 active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                                                                 'flex px-4 py-2 text-sm'
                                                             )}
+                                                            onClick={() => handleEdit(item)}
                                                         >
                                                             <PencilSquareIcon className="mr-3 h-5 w-5 text-gray-400" aria-hidden="true" />
                                                             <span>Edit</span>
-                                                        </Link>
+                                                        </span>
+                                                        // <Link
+                                                        //     href="#"
+                                                        //     className={classNames(
+                                                        //         active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                                                        //         'flex px-4 py-2 text-sm'
+                                                        //     )}
+                                                        // >
+                                                        //     <PencilSquareIcon className="mr-3 h-5 w-5 text-gray-400" aria-hidden="true" />
+                                                        //     <span>Edit</span>
+                                                        // </Link>
                                                     )}
                                                 </Menu.Item>
                                                 <Menu.Item>

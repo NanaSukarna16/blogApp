@@ -2,7 +2,6 @@ import { Fragment, useState } from 'react'
 import { Dialog, Menu, Transition } from '@headlessui/react'
 import {
     Bars3BottomLeftIcon,
-    BellIcon,
     HomeIcon,
     UsersIcon,
     XMarkIcon,

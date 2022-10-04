@@ -61,6 +61,7 @@ export default function Welcome({ post }) {
                                                     <div className="py-1">
                                                         <Menu.Item>
                                                             {({ active }) => (
+
                                                                 <Link
                                                                     href={route("post.edit", item.id)}
                                                                     className={classNames(

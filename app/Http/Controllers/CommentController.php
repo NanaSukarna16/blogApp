@@ -68,6 +68,8 @@ class CommentController extends Controller
         return Inertia::render('Post/Show', [
             'comment' => $post->comment()->with('user')->get(),
             'post' => $post,
+            'can_update' => request()->user()->can('update', $post),
+            'can_delete' =>  request()->user()->can('update', $post)
         ]);
     }
 
