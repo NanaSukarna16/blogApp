@@ -21,7 +21,7 @@ const navigation = [
         current: route().current('dashboard')
     },
     {
-        name: 'Post',
+        name: 'My Post',
         href: route('post.index'),
         icon: UsersIcon,
         current: route().current('post.index')
