@@ -68,8 +68,8 @@ class CommentController extends Controller
         return Inertia::render('Post/Show', [
             'comment' => $post->comment()->with('user')->get(),
             'post' => $post,
-            'can_update' => request()->user()->can('update', $post),
-            'can_delete' =>  request()->user()->can('update', $post)
+            'can_update' => request()->user()?->can('update', $post),
+            'can_delete' =>  request()->user()?->can('update', $post)
         ]);
     }
 
@@ -93,7 +93,28 @@ class CommentController extends Controller
      */
     public function update(Request $request, Comment $comment)
     {
-        //
+        // dd($request->all());
+        $validated = $request->validate([
+            'konten' => ['required'],
+        ]);
+
+        // dd("validasi berhasil");
+
+        $comment->update($validated + [
+            'id_user' => auth()->id(),
+            'id_post' => $comment->id_post
+        ]);
+
+        // dd("coba");
+
+
+
+
+        return redirect()->back()->with('flash', [
+            'type' => 'success',
+            'title' => 'Berhasil',
+            'body' => 'Comment Berhasil di Edit'
+        ]);
     }
 
     /**

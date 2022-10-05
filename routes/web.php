@@ -29,7 +29,7 @@ use Inertia\Inertia;
 //     ]);
 // });
 
-Route::get('/', [PostController::class, 'public'])->name('home');
+Route::get('/', [PostController::class, 'public']);
 Route::get('/detail-post/{post}', [CommentController::class, 'show'])->name('post.detail');
 
 // Route::get('/', [PostController::class, 'public']);
@@ -41,6 +41,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('post', PostController::class);
     Route::post('/detail-post/comment', [CommentController::class, 'store'])->name('comment.store');
     Route::post('comment/delete/{comment}', [CommentController::class, 'destroy'])->name('comment.destroy');
+    Route::patch('comment/update/{comment}', [CommentController::class, 'update'])->name('comment.update');
 });
 
 

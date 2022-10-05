@@ -11,8 +11,9 @@ import classNames from 'classnames';
 import { PencilSquareIcon, EllipsisVerticalIcon, TrashIcon } from '@heroicons/react/20/solid'
 import FlashMessage from '@/Components/FlashMessage';
 import Swal from 'sweetalert2';
+import { Inertia } from '@inertiajs/inertia';
 
-export default function ShowPost({ comment, post, can_update, can_delete }) {
+export default function ShowPost({ auth, comment, post, can_update, can_delete }) {
     const { data, setData, errors, processing, submit, reset } = useForm(
         {
             konten: "",
@@ -32,35 +33,32 @@ export default function ShowPost({ comment, post, can_update, can_delete }) {
     function handleEdit(comment) {
         Swal.fire({
             title: `Edit Comment ${comment.user.name}`,
-            input: 'text',
+            input: 'textarea',
+            inputLabel: "comment anda",
             inputValue: `${comment.konten}`,
             inputAttributes: {
                 autocapitalize: 'off',
             },
             showCancelButton: true,
             confirmButtonText: 'Update',
-            showLoaderOnConfirm: true,
-            preConfirm: (login) => {
-                return fetch(`//api.github.com/users/${login}`)
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error(response.statusText)
-                        }
-                        return response.json()
-                    })
-                    .catch(error => {
-                        Swal.showValidationMessage(
-                            `Request failed: ${error}`
-                        )
-                    })
-            },
-            allowOutsideClick: () => !Swal.isLoading()
         }).then((result) => {
+            // console.log(result);
             if (result.isConfirmed) {
-                Swal.fire({
-                    title: `${result.value.login}'s avatar`,
-                    imageUrl: result.value.avatar_url
-                })
+                Inertia.visit(route("comment.update", comment.id), {
+                    data: { 'konten': result.value },
+                    method: "patch",
+                    onSuccess: () => Swal.fire({
+                        icon: "success",
+                        title: `comment anda berhasi di edit`,
+                        imageUrl: result.value.avatar_url
+                    }),
+                    onError: () => Swal.fire({
+                        icon: "error",
+                        title: `Gagal mengupdate comment`,
+                        imageUrl: result.value.avatar_url
+                    })
+                });
+
             }
         })
     }
@@ -152,31 +150,33 @@ export default function ShowPost({ comment, post, can_update, can_delete }) {
                     </div>
                 </div>
 
+                {auth.user && (
+                    <form onSubmit={onSubmit} className="mt-2 space-y-3">
+                        <div>
+                            <TextInputHidden
+                                name="id_post"
+                                value={post.id}
+                                handleChange={(e) => setData("id_post", e.target.value)}
+                            />
+                            <InputError message={errors.konten} className="mt-2" />
+                        </div>
+                        <div>
+                            <InputLabel forInput="Komentar" value="Komentar" />
+                            <TextAreaInput
+                                name="konten"
+                                value={data.konten}
+                                className="mt-1 block w-full"
+                                handleChange={(e) => setData("konten", e.target.value)}
+                            />
+                            <InputError message={errors.konten} className="mt-2" />
+                        </div>
 
-                <form onSubmit={onSubmit} className="mt-2 space-y-3">
-                    <div>
-                        <TextInputHidden
-                            name="id_post"
-                            value={post.id}
-                            handleChange={(e) => setData("id_post", e.target.value)}
-                        />
-                        <InputError message={errors.konten} className="mt-2" />
-                    </div>
-                    <div>
-                        <InputLabel forInput="Komentar" value="Komentar" />
-                        <TextAreaInput
-                            name="konten"
-                            value={data.konten}
-                            className="mt-1 block w-full"
-                            handleChange={(e) => setData("konten", e.target.value)}
-                        />
-                        <InputError message={errors.konten} className="mt-2" />
-                    </div>
-
-                    <div className="flex items-center justify-end mt-4">
-                        <PrimaryButton processing={processing}>simpan</PrimaryButton>
-                    </div>
-                </form>
+                        <div className="flex items-center justify-end mt-4">
+                            <PrimaryButton processing={processing}>simpan</PrimaryButton>
+                        </div>
+                    </form>
+                )}
+                {!auth.user && <p className='font-medium text-lg text-gray-400 text-center'>Silahkan Login Untuk Menambahkan Komentar</p>}
             </div>
 
 
