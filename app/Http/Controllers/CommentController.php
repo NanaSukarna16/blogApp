@@ -17,7 +17,9 @@ class CommentController extends Controller
      */
     public function index()
     {
-        //
+        return Inertia::render('Comment/Index', [
+            'comment' => Comment::with('post')->where('id_user', auth()->user()->id)->with('user')->paginate(8),
+        ]);
     }
 
     /**
@@ -69,7 +71,8 @@ class CommentController extends Controller
             'comment' => $post->comment()->with('user')->get(),
             'post' => $post,
             'can_update' => request()->user()?->can('update', $post),
-            'can_delete' =>  request()->user()?->can('update', $post)
+            'can_delete' =>  request()->user()?->can('delete', $post),
+            // 'can_action' => request()->user()?->can('delete', $comment)
         ]);
     }
 
@@ -93,21 +96,14 @@ class CommentController extends Controller
      */
     public function update(Request $request, Comment $comment)
     {
-        // dd($request->all());
         $validated = $request->validate([
             'konten' => ['required'],
         ]);
-
-        // dd("validasi berhasil");
-
+        $this->authorize('update', $comment);
         $comment->update($validated + [
             'id_user' => auth()->id(),
             'id_post' => $comment->id_post
         ]);
-
-        // dd("coba");
-
-
 
 
         return redirect()->back()->with('flash', [

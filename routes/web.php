@@ -20,42 +20,20 @@ use Inertia\Inertia;
 |
 */
 
-// Route::get('/', function () {
-//     return Inertia::render('Welcome', [
-//         'canLogin' => Route::has('login'),
-//         'canRegister' => Route::has('register'),
-//         'laravelVersion' => Application::VERSION,
-//         'phpVersion' => PHP_VERSION,
-//     ]);
-// });
 
 Route::get('/', [PostController::class, 'public']);
 Route::get('/detail-post/{post}', [CommentController::class, 'show'])->name('post.detail');
-
-// Route::get('/', [PostController::class, 'public']);
 
 Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
 
     Route::resource('post', PostController::class);
+
+    Route::get('/comment', [CommentController::class, 'index'])->name('comment.index');
     Route::post('/detail-post/comment', [CommentController::class, 'store'])->name('comment.store');
     Route::post('comment/delete/{comment}', [CommentController::class, 'destroy'])->name('comment.destroy');
     Route::patch('comment/update/{comment}', [CommentController::class, 'update'])->name('comment.update');
 });
-
-
-// format date ke string
-// Route::get('/', function () {
-//     $posts = Post::all()->map(function ($post) {
-//         return [
-//             'id' => $post->id,
-//             'tanggal' => $post->created_at->toFormattedDateString(),
-//             'judul' => $post->judul,
-//             'konten' => $post->konten
-//         ];
-//     });
-//     return Inertia::render('Welcome', compact(('posts')));
-// });
 
 require __DIR__ . '/auth.php';

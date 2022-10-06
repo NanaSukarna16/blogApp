@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        \App\Models\User::factory(10)->hasPost(10)->create();
+        // \App\Models\User::factory(10)->hasPost(10)->create();
 
         // \App\Models\User::factory()->create([
         //     'name' => 'Ferdy',
@@ -30,6 +30,6 @@ class DatabaseSeeder extends Seeder
 
         // $post = Post::factory(5)->create();
 
-        Comment::factory(5)->create();
+        Comment::factory(5)->hasPost(5)->hasUser(5)->create();
     }
 }

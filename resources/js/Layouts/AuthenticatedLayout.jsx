@@ -5,6 +5,7 @@ import {
     HomeIcon,
     UsersIcon,
     XMarkIcon,
+    ChatBubbleBottomCenterTextIcon
 } from '@heroicons/react/24/outline'
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 import classNames from 'classnames'
@@ -24,6 +25,12 @@ const navigation = [
         href: route('post.index'),
         icon: UsersIcon,
         current: route().current('post.index')
+    },
+    {
+        name: 'My Comments',
+        href: route('comment.index'),
+        icon: ChatBubbleBottomCenterTextIcon,
+        current: route().current('comment.index')
     },
 
 ]
