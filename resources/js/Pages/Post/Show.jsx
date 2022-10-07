@@ -5,7 +5,7 @@ import TextAreaInput from '@/Components/TextAreaInput'
 import InputError from "@/Components/InputError";
 import PrimaryButton from "@/Components/PrimaryButton";
 import TextInputHidden from '@/Components/TextInputHidden';
-import { Fragment } from 'react'
+import { Fragment, useEffect } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 import classNames from 'classnames';
 import { PencilSquareIcon, EllipsisVerticalIcon, TrashIcon } from '@heroicons/react/20/solid'
@@ -21,12 +21,35 @@ export default function ShowPost({ auth, comment, post, can_update, can_delete }
         }
     );
 
+    useEffect(() => {
+        setTimeout(() => {
+            // parse url untuk mendapatkan id komentar
+            const commentIdFromUrl = new URLSearchParams(window.location.search).get('scroll-to');
+
+            // Cari element yang memiliki id komentar  dari rul 
+            const scrollToElement = document.getElementById(commentIdFromUrl)
+
+            // Scroll ke element tersebut
+            if (scrollToElement) {
+                scrollToElement?.scrollIntoView({behavior: "smooth"});
+          
+                // Highlight komentar yang di tambahkan
+                setTimeout(() => scrollToElement.classList.add("bg-yellow-50"), 500);  
+                
+                // Hapus highlight setelah 2 detik
+                setTimeout(() => scrollToElement.classList.remove("bg-yellow-50"), 2000);
+             }
+        });
+    }, []);
+
     function onSubmit(e) {
         e.preventDefault();
 
         const submitUrl = route("comment.store");
         submit("post", submitUrl, {
-            onSuccess: reset()
+            onSuccess: reset(),
+            // tidak untuk scroll ke atas
+            // preserveScroll: true,
         });
     }
 
@@ -190,7 +213,7 @@ export default function ShowPost({ auth, comment, post, can_update, can_delete }
 
                         {comment.map((item) => (
 
-                            <div className='bg-white px-4 py-5 sam:px-6' key={item.id}>
+                            <div className='bg-white px-4 py-5 sam:px-6' key={item.id} id={`comment-${item.id}`}>
                                 <span className="inline-block h-10 w-10 overflow-hidden rounded-full bg-gray-100">
                                     <svg className="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
                                         <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
@@ -199,6 +222,7 @@ export default function ShowPost({ auth, comment, post, can_update, can_delete }
                                 <h4 className="text-2xl inline-block font-medium text-gray-900 ml-3">
                                     {item.user.name}
                                 </h4>
+                                { item.can_action && (
                                 <Menu as="div" className="relative inline-block text-left ml-5">
                                     <div>
                                         <Menu.Button className="-m-2 flex items-center rounded-full p-2 text-gray-400 hover:text-gray-600">
@@ -241,25 +265,29 @@ export default function ShowPost({ auth, comment, post, can_update, can_delete }
                                                         // </Link>
                                                     )}
                                                 </Menu.Item>
-                                                <Menu.Item>
-                                                    {({ active }) => (
-                                                        <Link
-                                                            method='post'
-                                                            href={route('comment.destroy', item.id)}
-                                                            className={classNames(
-                                                                active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                                                                'flex px-4 py-2 text-sm'
-                                                            )}
-                                                        >
-                                                            <TrashIcon className="mr-3 h-5 w-5 text-gray-400" aria-hidden="true" />
-                                                            <span>Hapus</span>
-                                                        </Link>
-                                                    )}
-                                                </Menu.Item>
+
+                                                    <Menu.Item>
+                                                        {({ active }) => (
+                                                            <Link
+                                                                method='post'
+                                                                href={route('comment.destroy', item.id)}
+                                                                className={classNames(
+                                                                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                                                                    'flex px-4 py-2 text-sm'
+                                                                )}
+                                                            >
+                                                                <TrashIcon className="mr-3 h-5 w-5 text-gray-400" aria-hidden="true" />
+                                                                <span>Hapus</span>
+                                                            </Link>
+                                                        )}
+                                                    </Menu.Item>
+                                            
                                             </div>
                                         </Menu.Items>
                                     </Transition>
                                 </Menu>
+                                )}
+                               
                                 <p className="text-sm font-medium text-gray-900 mt-5">
                                     {item.konten}
                                 </p>
