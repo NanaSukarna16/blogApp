@@ -7,7 +7,7 @@ import Pagination from "@/Components/Pagintion";
 import { TrashIcon, EyeIcon } from "@heroicons/react/20/solid";
 
 export default function Post({ auth, errors, comment }) {
-    function handleDelete(target) {
+    function handleDelete(comment) {
         Swal.fire({
             title: "Anda yakin ingin menghapus komentar ini?",
             showDenyButton: true,
@@ -16,8 +16,8 @@ export default function Post({ auth, errors, comment }) {
             denyButtonText: "Tidak",
         }).then((result) => {
             if (result.isConfirmed) {
-                Inertia.visit(route("comment.destroy", target.id), {
-                    method: "delete",
+                Inertia.visit(route("comment.destroy", comment.id), {
+                    method: "post",
                 });
             } else if (result.isDenied) {
                 Swal.fire("Comment batal dihapus", "", "info");
@@ -76,13 +76,13 @@ export default function Post({ auth, errors, comment }) {
                                                     {item.konten}
                                                 </td>
                                                 <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium space-x-2 sm:pr-6">
-                                                    {/* <Link
-                                                        href={route("post.detail", item.post.id) + '#comment-' + item.id}
+                                                    <Link
+                                                        href={route("post.detail", item.post.id) + '?scroll-to=comment-' + item.id}
                                                         className="text-green-600 hover:text-green-900"
                                                     >
                                                         <EyeIcon className="inline-block w-5 h-5" />
                                                         <span className="sr-only">, {item.judul}</span>
-                                                    </Link> */}
+                                                    </Link>
                                                     <span
                                                         className="text-red-600 hover:text-red-900 cursor-pointer"
                                                         onClick={() => handleDelete(item)}
