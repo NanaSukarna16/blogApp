@@ -68,7 +68,12 @@ class CommentController extends Controller
     {
         $post->load('user');
         return Inertia::render('Post/Show', [
-            'comment' => $post->comment()->with('user')->get(),
+            'comment' => $post->comment()->with('user')->get()->map(function ($comment) {
+                return array_merge(
+                    $comment->toArray(),
+                    ['can_action' => request()->user()?->can('delete', $comment)]
+                );
+            }),
             'post' => $post,
             'can_update' => request()->user()?->can('update', $post),
             'can_delete' =>  request()->user()?->can('delete', $post),
