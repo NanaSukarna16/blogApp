@@ -53,6 +53,7 @@ export default function ShowPost({ auth, comment, post, can_update, can_delete }
         });
     }
 
+    // edit comment menggunakan sweetalert2
     function handleEdit(comment) {
         Swal.fire({
             title: `Edit Comment ${comment.user.name}`,
@@ -84,6 +85,30 @@ export default function ShowPost({ auth, comment, post, can_update, can_delete }
 
             }
         })
+    }
+
+    // hapus comment menggunakan sweetalert2
+    function handleDelete(comment) {
+        Swal.fire({
+            title: "Anda yakin ingin menghapus komentar ini?",
+            showDenyButton: true,
+            showCancelButton: true,
+            confirmButtonText: "Ya",
+            denyButtonText: "Tidak",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Inertia.visit(route("comment.destroy", comment.id), {
+                    method: "post",
+                    onSuccess: () => Swal.fire({
+                        icon: "success",
+                        title: `comment anda berhasi di hapus`,
+                        imageUrl: result.value.avatar_url
+                    }),
+                });
+            } else if (result.isDenied) {
+                Swal.fire("Post batal dihapus", "", "info");
+            }
+        });
     }
 
     return (
@@ -253,34 +278,22 @@ export default function ShowPost({ auth, comment, post, can_update, can_delete }
                                                             <PencilSquareIcon className="mr-3 h-5 w-5 text-gray-400" aria-hidden="true" />
                                                             <span>Edit</span>
                                                         </span>
-                                                        // <Link
-                                                        //     href="#"
-                                                        //     className={classNames(
-                                                        //         active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                                                        //         'flex px-4 py-2 text-sm'
-                                                        //     )}
-                                                        // >
-                                                        //     <PencilSquareIcon className="mr-3 h-5 w-5 text-gray-400" aria-hidden="true" />
-                                                        //     <span>Edit</span>
-                                                        // </Link>
                                                     )}
                                                 </Menu.Item>
-
-                                                    <Menu.Item>
-                                                        {({ active }) => (
-                                                            <Link
-                                                                method='post'
-                                                                href={route('comment.destroy', item.id)}
-                                                                className={classNames(
-                                                                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                                                                    'flex px-4 py-2 text-sm'
-                                                                )}
-                                                            >
-                                                                <TrashIcon className="mr-3 h-5 w-5 text-gray-400" aria-hidden="true" />
-                                                                <span>Hapus</span>
-                                                            </Link>
-                                                        )}
-                                                    </Menu.Item>
+                                                <Menu.Item>
+                                                    {({ active }) => (
+                                                        <span
+                                                            className={classNames(
+                                                                active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                                                                'flex px-4 py-2 text-sm'
+                                                            )}
+                                                            onClick={() => handleDelete(item)}
+                                                        >
+                                                            <TrashIcon className="mr-3 h-5 w-5 text-gray-400" aria-hidden="true" />
+                                                            <span>Hapus</span>
+                                                        </span>
+                                                    )}
+                                                </Menu.Item>
                                             
                                             </div>
                                         </Menu.Items>
