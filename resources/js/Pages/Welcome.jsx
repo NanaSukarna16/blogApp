@@ -3,11 +3,6 @@ import PublicLayout from '@/Layouts/PublicLayout'
 import { Link } from '@inertiajs/inertia-react'
 import { EyeIcon } from '@heroicons/react/20/solid'
 import FlashMessage from '@/Components/FlashMessage'
-import { Fragment } from 'react'
-import { Menu, Transition } from '@headlessui/react'
-import { PencilSquareIcon, EllipsisVerticalIcon, TrashIcon } from '@heroicons/react/20/solid'
-import classNames from 'classnames'
-
 
 export default function Welcome({ post }) {
     return (
